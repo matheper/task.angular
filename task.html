@@ -8,6 +8,11 @@
     <script type="text/javascript" src="task.js"></script>
   </head>
   <body>
-    <span ng-controller="MainCtrl">{{data}}</span>
+    <div ng-controller="getTasks as tasks">
+        <div ng-repeat="task in tasks.data.tasks">
+            <h1>{{task.description}}</h1>
+            <span>{{task}}</span>
+        </div>
+    </div>
   </body>
 </html>

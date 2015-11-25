@@ -9,9 +9,9 @@ app.config(function($httpProvider) {
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 });
 
-app.controller('MainCtrl', [ '$scope', '$resource', function($scope, $resource) {
+app.controller('getTasks', ['$resource', function($resource) {
     Tasks = $resource('http://127.0.0.1:5000/todo/api/v1.0/tasks');
-    var task = Tasks.get(function () {
+    var tasks = Tasks.get(function () {
     });
-    $scope.data = task;
+    this.data = tasks;
 }]);
