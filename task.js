@@ -10,8 +10,20 @@ app.config(function($httpProvider) {
 });
 
 app.controller('getTasks', ['$resource', function($resource) {
-    Tasks = $resource('http://127.0.0.1:5000/todo/api/v1.0/tasks');
-    var tasks = Tasks.get(function () {
-    });
-    this.data = tasks;
+    var Tasks = $resource('http://127.0.0.1:5000/todo/api/v1.0/tasks');
+    this.data = Tasks.get();
+
+}]);
+
+
+app.controller('TaskController', ['$resource', function($resource){
+    var Tasks = $resource('http://127.0.0.1:5000/todo/api/v1.0/tasks');
+    this.task = {};
+    this.addTask = function(){
+        Tasks.save(this.task);
+        this.task = {}
+        console.log($(this));
+        console.log(app);
+    }
+
 }]);

@@ -8,9 +8,20 @@
     <script type="text/javascript" src="task.js"></script>
   </head>
   <body>
+    <form name="addTaskForm"
+        ng-controller="TaskController as taskCtrl"
+        ng-submit="addTaskForm.$valid && taskCtrl.addTask()" novalidate>
+        <input type="text" ng-model="taskCtrl.task.title" required></input>
+        <textarea ng-model="taskCtrl.task.description"></textarea>
+        <input type="submit" value="Submit" />
+
+        <h1>{{taskCtrl.task.title}}</h1>
+        <span>{{taskCtrl.task.description}}</span>
+    </form>
     <div ng-controller="getTasks as tasks">
         <div ng-repeat="task in tasks.data.tasks">
-            <h1>{{task.description}}</h1>
+            <h1>{{task.title}}</h1>
+            <span>{{task.description}}</span>
             <span>{{task}}</span>
         </div>
     </div>
