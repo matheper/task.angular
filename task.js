@@ -1,4 +1,5 @@
 var app = angular.module('task.app', ['ngResource']);
+var baseURL = 'http://127.0.0.1:5000/todo/api/v1.0/tasks/'
 
 app.config(function($httpProvider) {
     //Enable cross domain calls
@@ -9,21 +10,32 @@ app.config(function($httpProvider) {
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 });
 
-app.controller('getTasks', ['$resource', function($resource) {
-    var Tasks = $resource('http://127.0.0.1:5000/todo/api/v1.0/tasks');
-    this.data = Tasks.get();
-
-}]);
-
 
 app.controller('TaskController', ['$resource', function($resource){
-    var Tasks = $resource('http://127.0.0.1:5000/todo/api/v1.0/tasks');
+    var TaskAPI = $resource(baseURL);
+    this.tasks = TaskAPI.get()
+
     this.task = {};
     this.addTask = function(){
-        Tasks.save(this.task);
+        TaskAPI.save(this.task);
         this.task = {}
-        console.log($(this));
-        console.log(app);
-    }
+        this.tasks = TaskAPI.get()
+    };
+
+    this.getTasks = function(taskStatus){
+        this.tasks = $resource(baseURL + 'today')
+    };
+
+    this.delTask = function(taskURI){
+        $resource(taskURI).remove();
+        this.tasks = TaskAPI.get();
+    };
+
+    this.changeTaskStatus = function(taskURI, taskStatus){
+        $resource(taskURI, null, {
+            update: { method: 'PUT' }
+        }).update({"status":taskStatus});
+        this.tasks = TaskAPI.get();
+    };
 
 }]);

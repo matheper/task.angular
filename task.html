@@ -7,10 +7,9 @@
     <script type="text/javascript" src="angular-resource.min.js"></script>
     <script type="text/javascript" src="task.js"></script>
   </head>
-  <body>
-    <form name="addTaskForm"
-        ng-controller="TaskController as taskCtrl"
-        ng-submit="addTaskForm.$valid && taskCtrl.addTask()" novalidate>
+  <body ng-controller="TaskController as taskCtrl">
+    <form name="addTaskForm" novalidate
+        ng-submit="addTaskForm.$valid && taskCtrl.addTask()">
         <input type="text" ng-model="taskCtrl.task.title" required></input>
         <textarea ng-model="taskCtrl.task.description"></textarea>
         <input type="submit" value="Submit" />
@@ -18,12 +17,25 @@
         <h1>{{taskCtrl.task.title}}</h1>
         <span>{{taskCtrl.task.description}}</span>
     </form>
-    <div ng-controller="getTasks as tasks">
-        <div ng-repeat="task in tasks.data.tasks">
+    <div>
+        <div ng-repeat="task in taskCtrl.tasks.tasks">
             <h1>{{task.title}}</h1>
             <span>{{task.description}}</span>
             <span>{{task}}</span>
+            <a class="btn btn-warning" ng-click="taskCtrl.changeTaskStatus(task.uri, 'todo')">
+                Todo
+            </a>
+            <a class="btn btn-primary" ng-click="taskCtrl.changeTaskStatus(task.uri, 'today')">
+                Today
+            </a>
+            <a class="btn btn-success" ng-click="taskCtrl.changeTaskStatus(task.uri, 'done')">
+                Done
+            </a>
+            <a class="btn btn-danger" ng-click="taskCtrl.delTask(task.uri)">
+                Delete
+            </a>
         </div>
     </div>
+
   </body>
 </html>
