@@ -1,5 +1,6 @@
 var app = angular.module('task.app', ['ngResource']);
 var baseURL = 'http://127.0.0.1:5000/todo/api/v1.0/tasks/'
+var taskStatus = ['todo', 'today', 'done'];
 
 app.config(function($httpProvider) {
     //Enable cross domain calls
@@ -13,17 +14,22 @@ app.config(function($httpProvider) {
 
 app.controller('TaskController', ['$resource', function($resource){
     var TaskAPI = $resource(baseURL);
-    this.tasks = TaskAPI.get()
-
+    this.tasks = TaskAPI.get();
     this.task = {};
+
     this.addTask = function(){
         TaskAPI.save(this.task);
-        this.task = {}
-        this.tasks = TaskAPI.get()
+        this.task = {};
+        this.tasks = TaskAPI.get();
     };
 
-    this.getTasks = function(taskStatus){
-        this.tasks = $resource(baseURL + 'today')
+    this.getTasks = function(tStatus){
+        var url = baseURL;
+        if (typeof tStatus !== 'undefined')
+            url += taskStatus[tStatus];
+        console.log(url);
+        this.tasks = $resource(url).get();
+        console.log(this.tasks);
     };
 
     this.delTask = function(taskURI){
@@ -37,5 +43,16 @@ app.controller('TaskController', ['$resource', function($resource){
         }).update({"status":taskStatus});
         this.tasks = TaskAPI.get();
     };
-
 }]);
+
+app.controller('TabController', function(){
+    this.tab = 1;
+
+    this.selectTab = function(setTab){
+        this.tab = setTab;
+    };
+
+    this.isSelected = function(checkTab){
+        return this.tab === checkTab;
+    };
+});
