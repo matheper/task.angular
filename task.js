@@ -5,7 +5,6 @@ var taskStatus = ['todo', 'today', 'done'];
 app.config(function($httpProvider) {
     //Enable cross domain calls
     $httpProvider.defaults.useXDomain = true;
-
     //Remove the header containing XMLHttpRequest used to identify ajax call
     //that would prevent CORS from working
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -13,40 +12,42 @@ app.config(function($httpProvider) {
 
 
 app.controller('TaskController', ['$resource', function($resource){
-    var TaskAPI = $resource(baseURL);
-    this.tasks = TaskAPI.get();
+    this.TaskAPI = $resource;
+    this.tasks = this.TaskAPI(baseURL).get();
     this.task = {};
-
-    this.addTask = function(){
-        TaskAPI.save(this.task);
-        this.task = {};
-        this.tasks = TaskAPI.get();
-    };
 
     this.getTasks = function(tStatus){
         var url = baseURL;
         if (typeof tStatus !== 'undefined')
-            url += taskStatus[tStatus];
-        console.log(url);
-        this.tasks = $resource(url).get();
-        console.log(this.tasks);
+            url += tStatus;
+        this.tasks = this.TaskAPI(url).get();
     };
 
-    this.delTask = function(taskURI){
-        $resource(taskURI).remove();
-        this.tasks = TaskAPI.get();
+    this.addTask = function(tStatus){
+        this.task['status'] = tStatus;
+        this.TaskAPI(baseURL).save(this.task)
+        this.task = {};
+        this.getTasks(tStatus);
     };
 
-    this.changeTaskStatus = function(taskURI, taskStatus){
-        $resource(taskURI, null, {
+    this.delTask = function(task, tStatus){
+        this.TaskAPI(task['uri']).remove();
+        this.getTasks(tStatus);
+    };
+
+    this.updateTask = function(task, tStatus){
+        var taskURI = task['uri'];
+        var currentStatus = task['status'];
+        this.TaskAPI(taskURI, null, {
             update: { method: 'PUT' }
-        }).update({"status":taskStatus});
-        this.tasks = TaskAPI.get();
+        }).update({"status":tStatus})
+        this.getTasks(currentStatus);
     };
 }]);
 
+
 app.controller('TabController', function(){
-    this.tab = 1;
+    this.tab = 3;
 
     this.selectTab = function(setTab){
         this.tab = setTab;
@@ -54,5 +55,10 @@ app.controller('TabController', function(){
 
     this.isSelected = function(checkTab){
         return this.tab === checkTab;
+    };
+
+    this.getSelected = function(){
+        selected = taskStatus[this.tab] || '';
+        return selected;
     };
 });
