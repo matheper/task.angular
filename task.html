@@ -13,7 +13,7 @@
   <section class="tab" ng-controller = "TabController as tabCtrl">
     <ul class="nav nav-pills">
         <li ng-repeat="tab in tabCtrl.tabs" ng-class="{active: tabCtrl.isSelected($index-1)}">
-            <a href ng-click="tabCtrl.selectTab($index-1); taskCtrl.getTasks(tab.getSelected())">
+            <a href ng-click="tabCtrl.selectTab($index-1); taskCtrl.getTasks(tabCtrl.getSelected())">
                 {{tab}}
             </a>
         </li>
@@ -39,13 +39,16 @@
             <span>{{task.description}}</span>
             <span>{{task.status}}</span>
             <br/>
-            <a class="btn btn-warning" ng-click="taskCtrl.updateTask(task, 'todo')">
+            <a class="btn btn-warning" ng-hide="tabCtrl.getSelected() == 'todo'"
+                ng-click="taskCtrl.updateTask(task, 'todo')">
                 Todo
             </a>
-            <a class="btn btn-primary" ng-click="taskCtrl.updateTask(task, 'today')">
+            <a class="btn btn-primary" ng-hide="tabCtrl.getSelected() == 'today'"
+                 ng-click="taskCtrl.updateTask(task, 'today')">
                 Today
             </a>
-            <a class="btn btn-success" ng-click="taskCtrl.updateTask(task, 'done')">
+            <a class="btn btn-success" ng-hide="tabCtrl.getSelected() == 'done'"
+                 ng-click="taskCtrl.updateTask(task, 'done')">
                 Done
             </a>
             <a class="btn btn-danger" ng-click="taskCtrl.delTask(task, tabCtrl.getSelected())">

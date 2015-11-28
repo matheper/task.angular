@@ -17,6 +17,7 @@ app.controller('TaskController', ['$resource', function($resource){
     this.task = {};
 
     this.getTasks = function(tStatus){
+        console.log(tStatus);
         var url = baseURL;
         if (typeof tStatus !== 'undefined')
             url += tStatus;
