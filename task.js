@@ -11,44 +11,46 @@ app.config(function($httpProvider) {
 });
 
 
-app.controller('TaskController', ['$resource', function($resource){
+app.controller('TaskController', ['$resource', '$scope', function($resource, $scope){
     this.TaskAPI = $resource;
     this.tasks = this.TaskAPI(baseURL).get();
     this.task = {};
 
     this.getTasks = function(tStatus){
-        console.log(tStatus);
         var url = baseURL;
-        if (typeof tStatus !== 'undefined')
+        if (tStatus)
             url += tStatus;
         this.tasks = this.TaskAPI(url).get();
     };
 
     this.addTask = function(tStatus){
-        this.task['status'] = tStatus;
-        this.TaskAPI(baseURL).save(this.task)
-        this.task = {};
-        this.getTasks(tStatus);
+        if (tStatus)
+            this.task['status'] = tStatus;
+        this.TaskAPI(baseURL).save(this.task).$promise.then(function(){
+            $scope.taskCtrl.getTasks(tStatus);
+            $scope.taskCtrl.task = {};
+        });
     };
 
     this.delTask = function(task, tStatus){
-        this.TaskAPI(task['uri']).remove();
-        this.getTasks(tStatus);
+        this.TaskAPI(task['uri']).remove().$promise.then(function(){
+            $scope.taskCtrl.getTasks(tStatus);
+        });
     };
 
-    this.updateTask = function(task, tStatus){
+    this.updateTask = function(task, tStatus, currentStatus){
         var taskURI = task['uri'];
-        var currentStatus = task['status'];
-        this.TaskAPI(taskURI, null, {
-            update: { method: 'PUT' }
-        }).update({"status":tStatus})
-        this.getTasks(currentStatus);
+        this.TaskAPI(taskURI, null, { update: { method: 'PUT' } }).update(
+            {"status":tStatus}).$promise.then(function(){
+                $scope.taskCtrl.getTasks(currentStatus);
+            }
+        );
     };
 }]);
 
 
 app.controller('TabController', function(){
-    this.tab = 3;
+    this.tab = -1;
     this.tabs = ['all', 'todo', 'today', 'done'];
 
     this.selectTab = function(setTab){
