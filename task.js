@@ -48,6 +48,7 @@ app.controller('TaskController', ['$resource', function($resource){
 
 app.controller('TabController', function(){
     this.tab = 3;
+    this.tabs = ['all', 'todo', 'today', 'done'];
 
     this.selectTab = function(setTab){
         this.tab = setTab;

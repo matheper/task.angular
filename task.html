@@ -3,50 +3,35 @@
   <head>
     <meta charset="utf-8" /> 
     <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/task.css" />
     <script type="text/javascript" src="angular.min.js"></script>
     <script type="text/javascript" src="angular-resource.min.js"></script>
     <script type="text/javascript" src="task.js"></script>
   </head>
-  <body ng-controller="TaskController as taskCtrl">
-  <section class="tab" ng-controller = "TabController as tab">
+  <body>
+    <div class="task-page" ng-controller="TaskController as taskCtrl">
+  <section class="tab" ng-controller = "TabController as tabCtrl">
     <ul class="nav nav-pills">
-        <li ng-class="{active: tab.isSelected(3)}">
-            <a href ng-click="tab.selectTab(3); taskCtrl.getTasks()">All</a>
-        </li>
-        <li ng-class="{active: tab.isSelected(0)}">
-            <a href ng-click="tab.selectTab(0); taskCtrl.getTasks('todo')">Todo</a>
-        </li>
-        <li ng-class="{active: tab.isSelected(1)}">
-            <a href ng-click="tab.selectTab(1); taskCtrl.getTasks('today')">Today</a>
-        </li>
-        <li ng-class="{active: tab.isSelected(2)}">
-            <a href ng-click="tab.selectTab(2); taskCtrl.getTasks('done')">Done</a>
+        <li ng-repeat="tab in tabCtrl.tabs" ng-class="{active: tabCtrl.isSelected($index-1)}">
+            <a href ng-click="tabCtrl.selectTab($index-1); taskCtrl.getTasks(tab.getSelected())">
+                {{tab}}
+            </a>
         </li>
     </ul>
 
     <form name="addTaskForm" novalidate
-        ng-submit="addTaskForm.$valid && taskCtrl.addTask(tab.getSelected())">
+        ng-submit="addTaskForm.$valid && taskCtrl.addTask(tabCtrl.getSelected())">
         <input type="text" ng-model="taskCtrl.task.title" required></input>
         <textarea ng-model="taskCtrl.task.description"></textarea>
-        <input type="submit" value="Submit" />
+        <input class="btn btn-default" type="submit" value="Add" />
 
         <h1>{{taskCtrl.task.title}}</h1>
         <span>{{taskCtrl.task.description}}</span>
     </form>
 
-    <div ng-show="tab.isSelected(0)">
-        <h4>Todo</h4>
+    <div ng-repeat="tab in tabCtrl.tabs" ng-show="tabCtrl.isSelected($index-1)">
+        <h4>{{tab}}</h4>
     </div>
-    <div ng-show="tab.isSelected(1)">
-        <h4>Today</h4>
-    </div>
-    <div ng-show="tab.isSelected(2)">
-        <h4>Done</h4>
-    </div>
-    <div ng-show="tab.isSelected(3)">
-        <h4>All</h4>
-    </div>
-
 
     <div>
         <div ng-repeat="task in taskCtrl.tasks.tasks">
@@ -63,13 +48,13 @@
             <a class="btn btn-success" ng-click="taskCtrl.updateTask(task, 'done')">
                 Done
             </a>
-            <a class="btn btn-danger" ng-click="taskCtrl.delTask(task, tab.getSelected())">
+            <a class="btn btn-danger" ng-click="taskCtrl.delTask(task, tabCtrl.getSelected())">
                 Delete
             </a>
         </div>
     </div>
 
   </section>
-
+    </div>
   </body>
 </html>
