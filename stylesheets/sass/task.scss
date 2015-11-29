@@ -5,7 +5,8 @@ html{
 }
 body{
     height:100%;
-    background: linear-gradient(to bottom, $blue-light, $light 100%);
+//    background: linear-gradient(to bottom, $blue-light, $light 100%);
+    background-color: $blue-light;
     color: $gray;
 }
 
@@ -47,20 +48,20 @@ body{
     border-radius: 3px;
     text-align:right;
     display: inline-block;
+    vertical-align: top;
     padding: 5px;
     margin: 0px 15px 15px 0px;
     width: 272px;
     box-shadow: 0px 3px 3px 0px #000;
-    &.todo{
-        background-color:$item-yellow;
-    }
+    background-color:$item-yellow;
     &.today{
         background-color: $item-blue;
     }
     &.done{
-        background-color:$item-green;
+        background-color: $item-green;
     }
     &.preview{
+        margin-top: 10px;
     }
     .text{
         margin-bottom: 15px;
@@ -70,6 +71,10 @@ body{
         display:block;
         &.title{
             font-size: 28px;
+        }
+        &.description{
+            white-space: pre;
+            margin: 30px 0;
         }
         &.status{
             text-transform: capitalize;
