@@ -1,6 +1,5 @@
 var app = angular.module('task.app', ['ngResource']);
-var baseURL = 'http://127.0.0.1:5000/todo/api/v1.0/tasks/';
-baseURL = 'http://taskflask-matheper.rhcloud.com/todo/api/v1.0/tasks';
+var baseURL = 'http://taskflask-matheper.rhcloud.com/todo/api/v1.0/tasks/';
 var taskStatus = ['todo', 'today', 'done'];
 
 app.config(function($httpProvider) {
